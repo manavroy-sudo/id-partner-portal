@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — InsuranceDekho Partner Portal</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="login-body">
+
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">ID</div>
+      <div>
+        <div class="login-title">Partner Portal</div>
+        <div class="login-sub">AM and Above Focused Partners</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Enter GID -->
+    <div id="stepGid">
+      <div class="login-field">
+        <label>Employee ID / GID</label>
+        <input type="text" id="gidInput" placeholder="e.g. IDK-1234" autocomplete="off" spellcheck="false"/>
+      </div>
+      <button class="login-btn" id="btnNext">Continue</button>
+      <div class="login-error" id="gidError"></div>
+    </div>
+
+    <!-- Step 2: Enter Password -->
+    <div id="stepPass" style="display:none;">
+      <div style="font-size:13px;color:#94a3b8;margin-bottom:16px;">
+        Signing in as <b id="displayGid" style="color:#e2e8f0;"></b>
+        — <button class="login-link" id="btnBack">change</button>
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="passInput" placeholder="Enter your password"/>
+      </div>
+      <button class="login-btn" id="btnLogin">Sign In</button>
+      <div class="login-error" id="passError"></div>
+    </div>
+
+    <!-- Step 3: Set new password -->
+    <div id="stepSetPass" style="display:none;">
+      <div class="login-info show" style="margin-bottom:16px;">
+        👋 Welcome! Your account is ready — please set a password to continue.
+      </div>
+      <div class="login-field">
+        <label>New Password</label>
+        <input type="password" id="newPassInput" placeholder="Choose a password"/>
+      </div>
+      <div class="login-field">
+        <label>Confirm Password</label>
+        <input type="password" id="confirmPassInput" placeholder="Repeat password"/>
+      </div>
+      <button class="login-btn" id="btnSetPass">Set Password & Sign In</button>
+      <div class="login-error" id="setPassError"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+  (function(){
+    'use strict';
+
+    const $=id=>document.getElementById(id);
+
+    async function sha256(str){
+      const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    function showError(id, msg){ const el=$(id); el.textContent=msg; el.classList.add('show'); }
+    function hideError(id){ $(id).classList.remove('show'); }
+    function setLoading(btnId, loading){
+      const btn=$(btnId); btn.disabled=loading;
+      btn.textContent=loading?'Please wait…':btn.dataset.label||btn.textContent;
+    }
+    ['btnNext','btnLogin','btnSetPass'].forEach(id=>{const b=$(id);if(b)b.dataset.label=b.textContent;});
+
+    function goToDashboard(user){
+      sessionStorage.setItem('peUser',JSON.stringify(user));
+      if(user.role==='MASTER'||['IDK-MASTER','CENTRAL'].some(k=>user.gid.toUpperCase().includes(k))){
+        location.href='master.html';
+      } else {
+        location.href='dashboard.html';
+      }
+    }
+
+    // Step 1: GID check
+    async function checkGid(){
+      const gid=($('gidInput').value||'').trim().toUpperCase();
+      if(!gid){ showError('gidError','Please enter your Employee ID.'); return; }
+      hideError('gidError');
+      setLoading('btnNext',true);
+      try{
+        const r=await fetch(API_URL+'?action=checkPassword&gid='+encodeURIComponent(gid));
+        const res=await r.json();
+        if(!res.success){ showError('gidError', res.message||'User not found.'); return; }
+        $('displayGid').textContent=gid;
+        $('stepGid').style.display='none';
+        if(res.hasPassword){
+          $('stepPass').style.display='block';
+          $('passInput').focus();
+        } else {
+          $('stepSetPass').style.display='block';
+          $('newPassInput').focus();
+        }
+      }catch(e){ showError('gidError','Connection error. Check your internet.'); }
+      finally{ setLoading('btnNext',false); }
+    }
+
+    // Step 2: Login
+    async function doLogin(){
+      const gid=($('gidInput').value||'').trim().toUpperCase();
+      const pass=($('passInput').value||'').trim();
+      if(!pass){ showError('passError','Enter your password.'); return; }
+      hideError('passError');
+      setLoading('btnLogin',true);
+      try{
+        const hash=await sha256(pass);
+        const r=await fetch(API_URL+'?action=login&gid='+encodeURIComponent(gid)+'&password='+encodeURIComponent(hash));
+        const res=await r.json();
+        if(!res.success){ showError('passError', res.message||'Login failed.'); return; }
+        goToDashboard(res.user);
+      }catch(e){ showError('passError','Connection error.'); }
+      finally{ setLoading('btnLogin',false); }
+    }
+
+    // Step 3: Set password
+    async function doSetPass(){
+      const gid=($('gidInput').value||'').trim().toUpperCase();
+      const np=($('newPassInput').value||'').trim();
+      const cp=($('confirmPassInput').value||'').trim();
+      if(!np||np.length<4){ showError('setPassError','Password must be at least 4 characters.'); return; }
+      if(np!==cp){ showError('setPassError','Passwords do not match.'); return; }
+      hideError('setPassError');
+      setLoading('btnSetPass',true);
+      try{
+        const hash=await sha256(np);
+        const r=await fetch(API_URL+'?action=setPassword&gid='+encodeURIComponent(gid)+'&oldPassword=&newPassword='+encodeURIComponent(hash));
+        const res=await r.json();
+        if(!res.success){ showError('setPassError', res.message||'Failed to set password.'); return; }
+        // Auto login
+        const lr=await fetch(API_URL+'?action=login&gid='+encodeURIComponent(gid)+'&password='+encodeURIComponent(hash));
+        const lres=await lr.json();
+        if(lres.success) goToDashboard(lres.user);
+        else showError('setPassError','Password set but login failed. Please refresh and try.');
+      }catch(e){ showError('setPassError','Connection error.'); }
+      finally{ setLoading('btnSetPass',false); }
+    }
+
+    $('btnNext').addEventListener('click',checkGid);
+    $('gidInput').addEventListener('keydown',e=>{ if(e.key==='Enter') checkGid(); });
+
+    $('btnLogin').addEventListener('click',doLogin);
+    $('passInput').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+    $('btnSetPass').addEventListener('click',doSetPass);
+
+    $('btnBack').addEventListener('click',()=>{
+      $('stepPass').style.display='none';
+      $('stepSetPass').style.display='none';
+      $('stepGid').style.display='block';
+      $('gidInput').focus();
+    });
+
+    // Auto-redirect if already logged in
+    const existing=sessionStorage.getItem('peUser');
+    if(existing){
+      try{ goToDashboard(JSON.parse(existing)); } catch(e){ sessionStorage.removeItem('peUser'); }
+    }
+  })();
+  </script>
+</body>
+</html>
