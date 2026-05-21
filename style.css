@@ -1,75 +1,78 @@
 /* =====================================================================
    InsuranceDekho — AM and Above Focused Partners Portal
-   style.css v6
+   style.css v8 — InsuranceDekho brand theme (red/white)
    ===================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0f172a;
-  --bg2:       #1e293b;
-  --bg3:       #334155;
-  --card:      #1e293b;
-  --card2:     #263144;
+  --id-red:    #e8192c;
+  --id-red2:   #c0111f;
+  --id-red3:   #ff3347;
+  --bg:        #0d1117;
+  --bg2:       #161b22;
+  --bg3:       #21262d;
+  --card:      #161b22;
+  --card2:     #1c2128;
   --border:    rgba(255,255,255,.08);
-  --text:      #e2e8f0;
-  --text2:     #94a3b8;
-  --text3:     #64748b;
-  --blue:      #2563eb;
-  --green:     #16a34a;
-  --red:       #dc2626;
-  --amber:     #d97706;
-  --purple:    #7c3aed;
-  --teal:      #0d9488;
-  --pink:      #db2777;
+  --text:      #f0f6fc;
+  --text2:     #8b949e;
+  --text3:     #484f58;
+  --blue:      #58a6ff;
+  --green:     #3fb950;
+  --red:       #f85149;
+  --amber:     #d29922;
+  --purple:    #bc8cff;
+  --teal:      #39d353;
   --radius:    10px;
-  --shadow:    0 4px 24px rgba(0,0,0,.4);
+  --shadow:    0 8px 32px rgba(0,0,0,.5);
 }
 
 html { font-size: 14px; }
 body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg2); }
 ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
 
-/* ── Topbar ── */
+/* ── Topbar — InsuranceDekho red gradient ── */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(90deg, #1a237e 0%, #1565c0 100%);
+  background: linear-gradient(90deg, #b01020 0%, var(--id-red) 60%, #ff4d5e 100%);
   padding: 0 20px; height: 56px; position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,.5);
+  box-shadow: 0 2px 16px rgba(232,25,44,.4);
 }
 .topbar-left, .topbar-right { display: flex; align-items: center; gap: 12px; }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand-mark {
   width: 36px; height: 36px; border-radius: 8px;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  background: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 14px; color: #1a1a1a;
+  font-weight: 900; font-size: 13px; color: var(--id-red);
+  letter-spacing: -.5px;
 }
 .brand-name { font-weight: 700; font-size: 14px; color: #fff; line-height: 1.2; }
-.brand-sub  { font-size: 11px; color: rgba(255,255,255,.6); }
+.brand-sub  { font-size: 11px; color: rgba(255,255,255,.7); }
 
 /* ── User chip ── */
 .user-chip { display: flex; flex-direction: column; align-items: flex-end; }
 .user-chip-name { font-weight: 600; font-size: 13px; color: #fff; }
-.user-chip-role { font-size: 10px; color: rgba(255,255,255,.6); }
+.user-chip-role { font-size: 10px; color: rgba(255,255,255,.7); }
 
 /* ── Tabs ── */
 .tabs {
-  display: flex; gap: 2px; background: var(--bg2);
-  border-bottom: 1px solid var(--border); padding: 0 16px;
+  display: flex; gap: 0; background: var(--bg2);
+  border-bottom: 2px solid var(--border); padding: 0 16px;
   overflow-x: auto; white-space: nowrap;
 }
 .tab {
-  padding: 12px 18px; border: none; background: none; color: var(--text2);
-  font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent;
+  padding: 13px 18px; border: none; background: none; color: var(--text2);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
   transition: color .2s, border-color .2s;
 }
 .tab:hover { color: var(--text); }
-.tab.active { color: #60a5fa; border-bottom-color: #60a5fa; font-weight: 600; }
+.tab.active { color: var(--id-red); border-bottom-color: var(--id-red); font-weight: 600; }
 
 /* ── Tab panes ── */
 .tab-pane { display: none; padding: 20px; }
@@ -80,8 +83,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   padding: 10px 20px; font-size: 13px; font-weight: 500;
   border-bottom: 1px solid var(--border);
 }
-.status-bar.loading { background: rgba(37,99,235,.15); color: #93c5fd; }
-.status-bar.error   { background: rgba(220,38,38,.15);  color: #fca5a5; }
+.status-bar.loading { background: rgba(88,166,255,.1); color: #79c0ff; }
+.status-bar.error   { background: rgba(232,25,44,.1);  color: #ffa8b0; }
 .status-bar.hidden  { display: none; }
 
 /* ── Card grid ── */
@@ -96,16 +99,18 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 14px 16px;
   position: relative; overflow: hidden;
+  transition: border-color .2s;
 }
+.kpi-card:hover { border-color: rgba(232,25,44,.3); }
 .kpi-card.kpi-lg { padding: 20px; }
-.kpi-label { font-size: 11px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.kpi-label { font-size: 11px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
 .kpi-value { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.1; }
 .kpi-lg .kpi-value { font-size: 28px; }
 .kpi-sub  { font-size: 11px; color: var(--text2); margin-top: 4px; }
 .kpi-foot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
-/* ── Accent colours ── */
-.accent-blue   { border-left: 3px solid var(--blue); }
+/* ── Accent colours — ID red as primary ── */
+.accent-blue   { border-left: 3px solid var(--id-red); }
 .accent-green  { border-left: 3px solid var(--green); }
 .accent-amber  { border-left: 3px solid var(--amber); }
 .accent-purple { border-left: 3px solid var(--purple); }
@@ -117,14 +122,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   padding: 2px 8px; border-radius: 999px; font-size: 11px;
   background: var(--bg3); color: var(--text2);
 }
-.pill-green { background: rgba(22,163,74,.15); color: #4ade80; }
-.pill-red   { background: rgba(220,38,38,.15); color: #f87171; }
-.pill-blue  { background: rgba(37,99,235,.15); color: #93c5fd; }
-.pill-amber { background: rgba(245,158,11,.15); color: #fcd34d; }
+.pill-green { background: rgba(63,185,80,.15); color: #56d364; }
+.pill-red   { background: rgba(232,25,44,.15); color: #ff7b86; }
+.pill-blue  { background: rgba(88,166,255,.15); color: #79c0ff; }
+.pill-amber { background: rgba(210,153,34,.15); color: #e3b341; }
 
 /* ── Positive / negative ── */
-.pos { color: #4ade80 !important; }
-.neg { color: #f87171 !important; }
+.pos { color: #56d364 !important; }
+.neg { color: #f85149 !important; }
 
 /* ── Section titles ── */
 .section-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
@@ -133,7 +138,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
 /* ── Filter bar ── */
 .filter-bar {
   display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
-  padding: 12px; background: var(--card2); border-radius: var(--radius);
+  padding: 12px 14px; background: var(--card2); border-radius: var(--radius);
   border: 1px solid var(--border);
 }
 .filter-bar input, .filter-bar select {
@@ -141,28 +146,29 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   color: var(--text); padding: 6px 10px; border-radius: 6px;
   font-size: 12px; min-width: 130px;
 }
-.filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--blue); }
+.filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--id-red); }
 .filter-count { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
 
 /* ── Buttons ── */
 .btn-primary {
-  background: var(--blue); color: #fff; border: none;
+  background: var(--id-red); color: #fff; border: none;
   padding: 7px 16px; border-radius: 6px; font-size: 12px;
   font-weight: 600; cursor: pointer; transition: background .2s;
 }
-.btn-primary:hover { background: #1d4ed8; }
+.btn-primary:hover { background: var(--id-red2); }
 .btn-ghost {
-  background: transparent; color: var(--text2);
-  border: 1px solid var(--border); padding: 7px 14px;
+  background: transparent; color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.25); padding: 7px 14px;
   border-radius: 6px; font-size: 12px; cursor: pointer; transition: all .2s;
+  text-decoration: none; display: inline-block;
 }
-.btn-ghost:hover { background: var(--bg3); color: var(--text); }
+.btn-ghost:hover { background: rgba(255,255,255,.1); color: #fff; }
 .btn-link {
-  background: none; border: none; color: #60a5fa;
+  background: none; border: none; color: var(--id-red);
   font-size: 12px; cursor: pointer; padding: 2px 6px;
   text-decoration: underline;
 }
-.btn-link:hover { color: #93c5fd; }
+.btn-link:hover { color: var(--id-red3); }
 
 /* ── Table ── */
 .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
@@ -173,16 +179,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
   border-bottom: 1px solid var(--border);
 }
+.ptable thead tr th:first-child { border-left: 3px solid var(--id-red); }
 .ptable td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,.04); white-space: nowrap; }
 .ptable tr:last-child td { border-bottom: none; }
-.ptable tr:hover td { background: rgba(255,255,255,.03); }
+.ptable tr:hover td { background: rgba(232,25,44,.04); }
 .ptable.compact th, .ptable.compact td { padding: 6px 8px; font-size: 11px; }
 .rank-cell { font-weight: 700; text-align: center; }
-.rank-1 .rank-cell, .rank-1 { color: #fbbf24; }
-.rank-2 .rank-cell, .rank-2 { color: #94a3b8; }
-.rank-3 .rank-cell, .rank-3 { color: #cd7f32; }
 
-/* ── Partner name in table ── */
+/* ── Partner name ── */
 .partner-name { font-weight: 600; color: var(--text); }
 .partner-sub  { font-size: 10px; color: var(--text2); }
 
@@ -191,14 +195,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   display: inline-block; padding: 2px 7px; border-radius: 4px;
   font-size: 10px; font-weight: 600; letter-spacing: .03em;
 }
-.badge-green { background: rgba(22,163,74,.2); color: #4ade80; }
-.badge-red   { background: rgba(220,38,38,.2); color: #f87171; }
-.badge-blue  { background: rgba(37,99,235,.2); color: #93c5fd; }
-.badge-amber { background: rgba(245,158,11,.2); color: #fcd34d; }
+.badge-green { background: rgba(63,185,80,.2); color: #56d364; }
+.badge-red   { background: rgba(248,81,73,.2); color: #ffa8b0; }
+.badge-blue  { background: rgba(88,166,255,.2); color: #79c0ff; }
+.badge-amber { background: rgba(210,153,34,.2); color: #e3b341; }
 
 /* ── Trend labels ── */
-.trend-pos { color: #4ade80; font-size: 11px; }
-.trend-neg { color: #f87171; font-size: 11px; }
+.trend-pos { color: #56d364; font-size: 11px; }
+.trend-neg { color: #f85149; font-size: 11px; }
 
 /* ── Chart card ── */
 .chart-card {
@@ -206,10 +210,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   border-radius: var(--radius); padding: 16px;
 }
 
-/* ── KPI row (mini cards row) ── */
-.kpi-row {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;
-}
+/* ── KPI row ── */
+.kpi-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .kpi-mini {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 8px; padding: 10px 14px; display: flex;
@@ -221,26 +223,20 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
 
 /* ── AM grid ── */
 .am-grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.am-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 14px;
-}
+.am-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+.am-card:hover { border-color: rgba(232,25,44,.3); }
 .am-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
 .am-name { font-size: 14px; font-weight: 700; }
 .am-role { font-size: 10px; color: var(--text2); margin-top: 2px; }
 .am-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.as {
-  background: var(--bg); border-radius: 6px; padding: 6px 8px;
-}
+.as { background: var(--bg); border-radius: 6px; padding: 6px 8px; }
 .as-l { font-size: 10px; color: var(--text2); }
 .as-v { font-size: 13px; font-weight: 700; }
 
 /* ── Team grid ── */
 .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.team-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 14px;
-}
+.team-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+.team-card:hover { border-color: rgba(232,25,44,.3); }
 .team-card-head { margin-bottom: 10px; }
 .team-name { font-size: 14px; font-weight: 700; }
 .team-role { font-size: 10px; color: var(--text2); margin-top: 2px; }
@@ -253,8 +249,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
 .runrate-strip { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
 .rr-strip-card {
   flex: 1; min-width: 140px; background: var(--card);
-  border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px 20px;
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px;
 }
 .rr-strip-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
 .rr-strip-val   { font-size: 24px; font-weight: 800; color: var(--text); }
@@ -263,22 +258,22 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
 /* ── Modal ── */
 .modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
 .modal.hidden { display: none; }
-.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.7); }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.75); }
 .modal-window {
   position: relative; background: var(--bg2); border: 1px solid var(--border);
   border-radius: 14px; width: 92%; max-width: 1000px; max-height: 85vh;
   overflow-y: auto; padding: 24px; box-shadow: var(--shadow);
+  border-top: 3px solid var(--id-red);
 }
 .modal-close {
-  position: sticky; top: 0; float: right; background: var(--bg3);
-  border: none; color: var(--text); width: 28px; height: 28px;
-  border-radius: 50%; font-size: 16px; cursor: pointer; line-height: 28px;
-  text-align: center;
+  position: sticky; top: 0; float: right; background: var(--id-red);
+  border: none; color: #fff; width: 28px; height: 28px;
+  border-radius: 50%; font-size: 16px; cursor: pointer; line-height: 28px; text-align: center;
 }
 .modal-window h2 { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
 .modal-window h3 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; color: var(--text2); }
 .role-chip {
-  display: inline-block; background: var(--bg3); color: var(--text2);
+  display: inline-block; background: rgba(232,25,44,.15); color: #ffa8b0;
   padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px; font-weight: 400;
 }
 
@@ -290,71 +285,74 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
 }
 .remark-status { font-size: 11px; color: var(--text2); margin-top: 4px; }
 
-/* ── Zone comparison cards (master) ── */
+/* ── Zone comparison cards ── */
 .zone-comp-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px; position: relative;
-  overflow: hidden;
+  border-radius: 12px; padding: 16px; position: relative; overflow: hidden;
 }
-.zone-comp-card.rank-1 { border-color: rgba(251,191,36,.3); }
-.zone-comp-card.rank-2 { border-color: rgba(148,163,184,.3); }
+.zone-comp-card:hover { border-color: rgba(232,25,44,.25); }
+.zone-comp-card.rank-1 { border-color: rgba(255,215,0,.3); }
+.zone-comp-card.rank-2 { border-color: rgba(192,192,192,.3); }
 .zone-comp-card.rank-3 { border-color: rgba(205,127,50,.3); }
 .zone-comp-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
 .zone-comp-name { font-size: 16px; font-weight: 800; }
-.zone-comp-badge {
-  padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
-}
-.badge-gold   { background: rgba(251,191,36,.2); color: #fbbf24; }
-.badge-silver { background: rgba(148,163,184,.2); color: #94a3b8; }
+.zone-comp-badge { padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+.badge-gold   { background: rgba(255,215,0,.2); color: #ffd700; }
+.badge-silver { background: rgba(192,192,192,.2); color: #c0c0c0; }
 .badge-bronze { background: rgba(205,127,50,.2); color: #cd7f32; }
 .badge-normal { background: var(--bg3); color: var(--text2); }
 
 .zone-bar-wrap { margin-bottom: 12px; }
 .zone-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
-.zone-bar-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 3px; transition: width .6s; }
+.zone-bar-fill { height: 100%; background: linear-gradient(90deg, var(--id-red2), var(--id-red3)); border-radius: 3px; transition: width .6s; }
 
 .zone-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; }
 .zk { background: var(--bg); border-radius: 6px; padding: 6px 8px; }
 .zk-l { font-size: 10px; color: var(--text2); }
 .zk-v { font-size: 12px; font-weight: 700; }
-
-.zone-comp-rank {
-  position: absolute; bottom: 12px; right: 14px;
-  font-size: 40px; font-weight: 900; color: rgba(255,255,255,.04);
-  line-height: 1;
-}
+.zone-comp-rank { position: absolute; bottom: 12px; right: 14px; font-size: 40px; font-weight: 900; color: rgba(255,255,255,.04); line-height: 1; }
 #zoneCompareGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
-/* ── Role grid (master) ── */
+/* ── Role grid ── */
 #roleGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
-/* ── Master India grid ── */
-#pane-india .card-grid { margin-bottom: 14px; }
+/* ── Geo Analytics: top/worst city tables ── */
+.geo-section { margin-bottom: 20px; }
+.geo-section h3 {
+  font-size: 14px; font-weight: 700; margin-bottom: 10px;
+  padding-left: 10px; border-left: 3px solid var(--id-red);
+}
+.rank-top { color: #56d364; font-weight: 700; }
+.rank-mid { color: #e3b341; }
+.rank-bot { color: #f85149; font-weight: 700; }
+.pct-bar-wrap { width: 80px; display: inline-block; }
+.pct-bar { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; display: inline-block; width: 100%; vertical-align: middle; }
+.pct-bar-fill-good { height: 100%; background: #3fb950; border-radius: 3px; }
+.pct-bar-fill-bad  { height: 100%; background: var(--id-red); border-radius: 3px; }
 
-/* ── Empty state ── */
+/* ── Empty ── */
 .empty { padding: 40px; text-align: center; color: var(--text3); font-size: 13px; }
 
 /* ── Trend chart ── */
 #trendChart { max-height: 200px; }
 
-/* ── Login page ── */
+/* ── Login page — ID red branding ── */
 .login-body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  background: linear-gradient(135deg, #0d1117 0%, #1a0508 100%);
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
 }
 .login-card {
   background: var(--card); border: 1px solid var(--border);
+  border-top: 4px solid var(--id-red);
   border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 420px;
   box-shadow: var(--shadow);
 }
-.login-logo {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
-}
+.login-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
 .login-logo-mark {
   width: 44px; height: 44px; border-radius: 10px;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  background: var(--id-red);
   display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 18px; color: #1a1a1a;
+  font-weight: 900; font-size: 16px; color: #fff;
 }
 .login-title { font-size: 18px; font-weight: 700; }
 .login-sub   { font-size: 12px; color: var(--text2); margin-top: 2px; }
@@ -364,21 +362,21 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
   width: 100%; background: var(--bg); border: 1px solid var(--border);
   color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 14px;
 }
-.login-field input:focus { outline: none; border-color: var(--blue); }
+.login-field input:focus { outline: none; border-color: var(--id-red); }
 .login-btn {
-  width: 100%; background: var(--blue); color: #fff; border: none;
+  width: 100%; background: var(--id-red); color: #fff; border: none;
   padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700;
   cursor: pointer; transition: background .2s; margin-top: 4px;
 }
-.login-btn:hover { background: #1d4ed8; }
+.login-btn:hover { background: var(--id-red2); }
 .login-btn:disabled { background: var(--bg3); cursor: not-allowed; }
-.login-error { background: rgba(220,38,38,.15); color: #fca5a5; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px; display: none; }
+.login-error { background: rgba(232,25,44,.1); color: #ffa8b0; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px; display: none; border-left: 3px solid var(--id-red); }
 .login-error.show { display: block; }
-.login-info  { color: #93c5fd; background: rgba(37,99,235,.1); border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-top: 12px; display: none; }
+.login-info  { color: #79c0ff; background: rgba(88,166,255,.1); border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-top: 12px; display: none; }
 .login-info.show { display: block; }
-.login-link  { background: none; border: none; color: #60a5fa; font-size: 12px; cursor: pointer; text-decoration: underline; }
+.login-link  { background: none; border: none; color: var(--id-red); font-size: 12px; cursor: pointer; text-decoration: underline; }
 
-/* ── Master dashboard body ── */
+/* ── Master body ── */
 .master-body { background: var(--bg); }
 
 /* ── Responsive ── */

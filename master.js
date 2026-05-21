@@ -31,6 +31,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
     if(id==='states')  renderStates();
     if(id==='runrate') renderMasterRunRate();
     if(id==='logins')  loadLogins();
+    if(id==='geo')     { if(state.master) renderGeoAnalytics(state.master.geoAnalytics); }
   });
 });
 
@@ -348,3 +349,116 @@ $('btnRefreshLogins').addEventListener('click',loadLogins);
 
 loadMaster();
 })();
+
+// ========================= GEO ANALYTICS (City / State) =============
+window.renderGeoAnalytics = function(geo) {
+  if (!geo) return;
+  const safe=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  const fmtINR=n=>{if(!isFinite(n)||n===0)return '₹0';if(n>=1e7)return '₹'+(n/1e7).toFixed(2)+' Cr';if(n>=1e5)return '₹'+(n/1e5).toFixed(2)+' L';return '₹'+Math.round(n).toLocaleString('en-IN');};
+  const fmtInt=n=>Number(n||0).toLocaleString('en-IN');
+
+  const el = document.getElementById('geoPane');
+  if (!el) return;
+
+  function pctBarGood(pct) {
+    return `<div class="pct-bar-wrap"><div class="pct-bar" style="width:80px;"><div class="pct-bar-fill-good" style="width:${Math.min(pct,100)}%;"></div></div></div>`;
+  }
+  function pctBarBad(pct) {
+    return `<div class="pct-bar-wrap"><div class="pct-bar" style="width:80px;"><div class="pct-bar-fill-bad" style="width:${Math.min(pct,100)}%;"></div></div></div>`;
+  }
+
+  const stateRows = (geo.stateRanking||[]).map((s,i)=>{
+    const sm=s.summary, pct=s.overallPotAchPct||0;
+    const cls=i<3?'rank-top':pct<10?'rank-bot':'';
+    return `<tr>
+      <td class="${cls}">${i+1}</td>
+      <td><b>${safe(s.state)}</b></td>
+      <td>${safe(s.zone)}</td>
+      <td>${fmtInt(s.partnerCount)}</td>
+      <td>${fmtINR(sm.totalOverallPotential)}</td>
+      <td class="pos"><b>${fmtINR(sm.currentMonthPremium)}</b></td>
+      <td>${fmtINR(sm.prevMonthPremium)}</td>
+      <td class="${sm.momPct>=0?'pos':'neg'}">${sm.momPct>=0?'+':''}${sm.momPct}%</td>
+      <td><span class="${cls}">${pct}%</span> ${pctBarGood(pct)}</td>
+      <td>${s.maxPotAchPct}%</td>
+      <td class="pos">${fmtInt(sm.activeCount)}</td>
+      <td class="pos">${fmtInt(sm.totalCalls)}</td>
+      <td class="pos">${fmtInt(sm.totalVisits)}</td>
+    </tr>`;
+  }).join('');
+
+  const top10Rows = (geo.topCitiesByPotAch||[]).map((c,i)=>{
+    const sm=c.summary, pct=c.overallPotAchPct||0;
+    return `<tr>
+      <td class="rank-top"><b>${i+1}</b></td>
+      <td><b>${safe(c.city)}</b></td>
+      <td>${safe(c.state)}</td>
+      <td>${safe(c.zone)}</td>
+      <td>${fmtInt(c.partnerCount)}</td>
+      <td>${fmtINR(sm.totalOverallPotential)}</td>
+      <td class="pos"><b>${fmtINR(sm.currentMonthPremium)}</b></td>
+      <td class="rank-top"><b>${pct}%</b> ${pctBarGood(pct)}</td>
+      <td class="pos">${fmtInt(sm.activeCount)}</td>
+    </tr>`;
+  }).join('');
+
+  const worstCityRows = (geo.worstCities||[]).map((c,i)=>{
+    const sm=c.summary, pct=c.overallPotAchPct||0;
+    return `<tr>
+      <td class="rank-bot"><b>${i+1}</b></td>
+      <td><b>${safe(c.city)}</b></td>
+      <td>${safe(c.state)}</td>
+      <td>${safe(c.zone)}</td>
+      <td>${fmtInt(c.partnerCount)}</td>
+      <td>${fmtINR(sm.totalOverallPotential)}</td>
+      <td class="neg"><b>${fmtINR(sm.currentMonthPremium)}</b></td>
+      <td class="rank-bot"><b>${pct}%</b> ${pctBarBad(pct)}</td>
+      <td class="neg">${fmtInt(sm.inactiveCount)} inactive</td>
+    </tr>`;
+  }).join('');
+
+  const worstStateRows = (geo.worstStates||[]).map((s,i)=>{
+    const sm=s.summary, pct=s.overallPotAchPct||0;
+    return `<tr>
+      <td class="rank-bot"><b>${i+1}</b></td>
+      <td><b>${safe(s.state)}</b></td>
+      <td>${safe(s.zone)}</td>
+      <td>${fmtInt(s.partnerCount)}</td>
+      <td>${fmtINR(sm.totalOverallPotential)}</td>
+      <td class="neg"><b>${fmtINR(sm.currentMonthPremium)}</b></td>
+      <td class="rank-bot"><b>${pct}%</b> ${pctBarBad(pct)}</td>
+      <td class="neg">${fmtInt(sm.degrowthCount)} degrowth</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+  <div class="geo-section">
+    <h3>🏙️ Top 10 Cities — % Achievement vs Overall Potential (MTD)</h3>
+    <div class="table-wrap"><table class="ptable"><thead><tr>
+      <th>#</th><th>City</th><th>State</th><th>Zone</th><th>Partners</th>
+      <th>Overall Pot.</th><th>MTD</th><th>Pot. Ach%</th><th>Active</th>
+    </tr></thead><tbody>${top10Rows||'<tr><td colspan="9" class="empty">No data</td></tr>'}</tbody></table></div>
+  </div>
+  <div class="geo-section">
+    <h3>⚠️ Worst 10 Cities (Lowest % of Overall Potential achieved)</h3>
+    <div class="table-wrap"><table class="ptable"><thead><tr>
+      <th>#</th><th>City</th><th>State</th><th>Zone</th><th>Partners</th>
+      <th>Overall Pot.</th><th>MTD</th><th>Pot. Ach%</th><th>Inactive</th>
+    </tr></thead><tbody>${worstCityRows||'<tr><td colspan="9" class="empty">No data</td></tr>'}</tbody></table></div>
+  </div>
+  <div class="geo-section">
+    <h3>📉 Worst 10 States (Lowest % of Overall Potential achieved)</h3>
+    <div class="table-wrap"><table class="ptable"><thead><tr>
+      <th>#</th><th>State</th><th>Zone</th><th>Partners</th>
+      <th>Overall Pot.</th><th>MTD</th><th>Pot. Ach%</th><th>Degrowth</th>
+    </tr></thead><tbody>${worstStateRows||'<tr><td colspan="8" class="empty">No data</td></tr>'}</tbody></table></div>
+  </div>
+  <div class="geo-section">
+    <h3>🗺️ All States — Full Ranking</h3>
+    <div class="table-wrap"><table class="ptable"><thead><tr>
+      <th>#</th><th>State</th><th>Zone</th><th>Partners</th>
+      <th>Overall Pot.</th><th>MTD</th><th>LMTD</th><th>MoM%</th>
+      <th>Pot. Ach%</th><th>Max Pot.%</th><th>Active</th><th>Calls</th><th>Visits</th>
+    </tr></thead><tbody>${stateRows||'<tr><td colspan="13" class="empty">No data</td></tr>'}</tbody></table></div>
+  </div>`;
+};
